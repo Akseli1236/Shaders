@@ -1,0 +1,34 @@
+{
+ "ver": "0.1",
+ "info": {
+  "id": "W3XcWB",
+  "date": "0",
+  "viewed": 0,
+  "name": "Ex4, Task 5",
+  "description": "tag",
+  "likes": 0,
+  "published": "Private",
+  "usePreview": 0,
+  "tags": [
+   "tag"
+  ],
+  "hasliked": 0,
+  "parentid": "",
+  "parentname": ""
+ },
+ "renderpass": [
+  {
+   "inputs": [],
+   "outputs": [
+    {
+     "id": "4dfGRr",
+     "channel": 0
+    }
+   ],
+   "code": "#define PI 3.14159265359\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from -1 to 1) provided by ChatGPT\n    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / (iResolution.y);\n\n    vec3 cameraOrigin = vec3(0.0, 0.0, 4.08);\n    \n    float radfov = (60.0 / 2.0) * PI / 180.0;\n    float focalLength = 1.0 / tan(radfov);\n    \n    vec3 direction = normalize(vec3(uv, -0.5*focalLength));\n    vec3 normal = vec3(-0.8524684670021339, 0.52277864605111, 0.0);\n     \n    vec3 planeColor = vec3(0.0);\n    \n    vec3 center = vec3(0.0);\n    float inR = 0.3;\n    float outR = 0.7;\n    \n    vec3 inColor = vec3(0.19, 0.3, 0.2);\n    vec3 outColor = vec3(0.94, 0.97, 0.68);\n    vec3 distColor = outColor - inColor;\n    \n    float t = (0.0-cameraOrigin.z) / direction.z;\n    \n    vec3 p = cameraOrigin + t * direction;\n    \n    if (length(p.xy) > inR && length(p.xy) < outR){\n    \n        // Asked ChatGPT how to linearrly mix the colors\n        // Mix linearly blends colors between inner and outer radius.\n        float alpha = (length(p.xy) - inR) / (outR - inR); // normalized 0→1\n        planeColor = mix(inColor, outColor, alpha);\n    }\n    \n    \n    // Output to screen\n    fragColor = vec4(planeColor,1.0);\n}",
+   "name": "Image",
+   "description": "",
+   "type": "image"
+  }
+ ]
+}
