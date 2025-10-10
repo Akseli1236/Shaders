@@ -1,0 +1,34 @@
+{
+ "ver": "0.1",
+ "info": {
+  "id": "w3lyzs",
+  "date": "0",
+  "viewed": 0,
+  "name": "Ex4, Task 2",
+  "description": "tag",
+  "likes": 0,
+  "published": "Private",
+  "usePreview": 0,
+  "tags": [
+   "tag"
+  ],
+  "hasliked": 0,
+  "parentid": "",
+  "parentname": ""
+ },
+ "renderpass": [
+  {
+   "inputs": [],
+   "outputs": [
+    {
+     "id": "4dfGRr",
+     "channel": 0
+    }
+   ],
+   "code": "#define PI 3.14159265359\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from -1 to 1) provided by ChatGPT\n    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / (iResolution.y);\n    \n    vec3 cameraOrigin = vec3(0.0, 0.0, 4.08);\n    vec3 center = vec3(0.0,0.0,0.0);\n    float radius = 1.1;\n    vec3 oc = cameraOrigin - center;\n    \n    float radfov = (60.0 / 2.0) * PI / 180.0;\n    float focalLength = 1.0 / tan(radfov);\n    \n    vec3 direction = normalize(vec3(uv, -0.5*focalLength));\n    \n    vec3 normal = vec3(-0.8524684670021339, 0.52277864605111, 0.0);\n    \n    vec3 planeColor = vec3(0.0, 0.0, 0.0);\n    \n    float a = dot(direction,direction);\n    float b = 2.0 * dot(direction,oc);\n    float c = dot(oc, oc) - radius * radius;\n    \n    float discriminant = b*b - 4.0*a*c;\n    \n    if (discriminant >= 0.0) {\n        \n        //Lower value\n        float t = (-b - sqrt(discriminant)) / (2.0 * a);\n        \n        // Equation p=o+t*d\n        vec3 p = cameraOrigin + t * direction;\n        \n        //Normalize aka divide by vectors lenght\n        vec3 n = normalize(p - center);\n        \n        // We are using coordinates [-1,1] so going back to [0,1]\n        planeColor = n * 0.5 + 0.5;\n        \n        \n        \n    }\n    // Output to screen\n    fragColor = vec4(planeColor,1.0);\n}",
+   "name": "Image",
+   "description": "",
+   "type": "image"
+  }
+ ]
+}

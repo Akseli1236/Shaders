@@ -1,0 +1,34 @@
+{
+ "ver": "0.1",
+ "info": {
+  "id": "w3scDr",
+  "date": "0",
+  "viewed": 0,
+  "name": "Ex4,Task1",
+  "description": "Random Stuff",
+  "likes": 0,
+  "published": "Private",
+  "usePreview": 0,
+  "tags": [
+   "random"
+  ],
+  "hasliked": 0,
+  "parentid": "",
+  "parentname": ""
+ },
+ "renderpass": [
+  {
+   "inputs": [],
+   "outputs": [
+    {
+     "id": "4dfGRr",
+     "channel": 0
+    }
+   ],
+   "code": "uvec4 pcg4d(inout uvec4 seed)\n{\n    seed = seed * 1664525u + 1013904223u;\n    seed += seed.yzxy * seed.wxyz;\n    seed = (seed >> 16) ^ seed;\n    seed += seed.yzxy * seed.wxyz;\n    return seed;\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord)\n{\n    \n    vec2 uv = fragCoord/iResolution.xy;\n    \n    uvec4 seed = uvec4(fragCoord.x, fragCoord.y, iFrame, 146);\n    \n    // Use the seed to generate random vec4\n    // And normalized pixel coordinates (from 0 to 1)\n    vec4 random_between_zero_and_one = vec4(pcg4d(seed)) / vec4(0xFFFFFFFFu);\n    \n    // Set fragColor to the random noise\n    fragColor = random_between_zero_and_one;\n}\n",
+   "name": "Image",
+   "description": "",
+   "type": "image"
+  }
+ ]
+}

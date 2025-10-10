@@ -1,0 +1,34 @@
+{
+ "ver": "0.1",
+ "info": {
+  "id": "3XfyWS",
+  "date": "0",
+  "viewed": 0,
+  "name": "Ex4, Task3",
+  "description": "tag",
+  "likes": 0,
+  "published": "Private",
+  "usePreview": 0,
+  "tags": [
+   "tag"
+  ],
+  "hasliked": 0,
+  "parentid": "",
+  "parentname": ""
+ },
+ "renderpass": [
+  {
+   "inputs": [],
+   "outputs": [
+    {
+     "id": "4dfGRr",
+     "channel": 0
+    }
+   ],
+   "code": "#define PI 3.14159265359\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from -1 to 1) provided by ChatGPT\n    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / (iResolution.y);\n\n    vec3 cameraOrigin = vec3(0.0, 0.0, 4.08);\n    \n    float radfov = (60.0 / 2.0) * PI / 180.0;\n    float focalLength = 1.0 / tan(radfov);\n    \n    vec3 direction = normalize(vec3(uv, -0.5*focalLength));\n     \n    vec3 planeColor = vec3(0.0, 0.0, 0.0);\n    \n    vec3 v0 = vec3(-0.74, -0.78, -2.35);\n    vec3 v1 = vec3(0.74, -0.8, -2.4);\n    vec3 v2 = vec3(0.19, 0.78, -2.12);\n    \n    // e1 = v1-v0 and e2 = v2-v0\n    vec3 N = normalize(cross(v1-v0,v2-v0));\n    \n    // N * P = D\n    // D = N * P\n    float D = dot(N, v0);\n    \n    // N * P = D and P = origin + t*direction\n    // N * (origin + t*direction) = D\n    // N * origin + N * t*direction = D\n    // t = (D - N * origin) / N * direction\n    \n    if (abs(dot(N, direction)) > 1e-06) {\n        float t = (D-dot(N, cameraOrigin)) / dot(N, direction);\n        \n        if (t > 0.0){\n            vec3 P = cameraOrigin + t*direction;\n            \n            // From v0->v1->v2->v0\n            vec3 posEdge1 = cross(v1-v0,P-v0);\n            vec3 posEdge2 = cross(v2-v1,P-v1);\n            vec3 posEdge3 = cross(v0-v2,P-v2);\n\n            if (dot(posEdge1,N) >= 0.0 && dot(posEdge2,N) >= 0.0 && dot(posEdge3,N) >= 0.0){\n                planeColor = vec3(0.15, 0.42, 0.26);\n            }\n        }\n    }\n\n    // Output to screen\n    fragColor = vec4(planeColor,1.0);\n}",
+   "name": "Image",
+   "description": "",
+   "type": "image"
+  }
+ ]
+}
