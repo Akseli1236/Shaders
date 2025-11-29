@@ -1,0 +1,34 @@
+{
+ "ver": "0.1",
+ "info": {
+  "id": "tc3yzf",
+  "date": "0",
+  "viewed": 0,
+  "name": "Ex7, Task 2",
+  "description": "tag",
+  "likes": 0,
+  "published": "Private",
+  "usePreview": 0,
+  "tags": [
+   "tag"
+  ],
+  "hasliked": 0,
+  "parentid": "",
+  "parentname": ""
+ },
+ "renderpass": [
+  {
+   "inputs": [],
+   "outputs": [
+    {
+     "id": "4dfGRr",
+     "channel": 0
+    }
+   ],
+   "code": "#define PI 3.14159265359\n\nvec3 toSRGB(vec3 c)   { return pow(c, vec3(1.0 / 2.2)); }\n\nbool intersect_scene(\n    vec3 ray_origin,\n    vec3 ray_direction,\n    out vec3 hit_normal,\n    out int hit_object_index,\n    out float hit_t\n){\n    \n    hit_t = 1e9;\n    hit_object_index = -1;\n    \n    {\n        vec3 center = vec3(0.0,0.62,-1.92);\n        float radius = 0.62;\n        vec3 oc = ray_origin - center;\n        \n    \n        float a = dot(ray_direction,ray_direction);\n        float b = 2.0 * dot(ray_direction,oc);\n        float c = dot(oc, oc) - radius * radius;\n\n        float discriminant = b*b - 4.0*a*c;\n\n        if (discriminant >= 0.0) {\n\n            //Lower value\n            float t = (-b - sqrt(discriminant)) / (2.0 * a);\n            \n            vec3 p = ray_origin + t * ray_direction;\n        \n            //Normalize aka divide by vectors lenght\n            vec3 n = normalize(p - center);\n            \n            if (t > 0.0 && t < hit_t){\n                hit_t = t;\n                hit_normal = n;\n                hit_object_index = 0;\n            }\n        }\n    }\n    \n    {\n        vec3 normal = vec3(0.0, 1.0, 0.0);\n        \n        if (abs(dot(normal, ray_direction)) > 1e-06) {\n           float t = (-dot(normal, ray_origin)) / dot(normal, ray_direction);\n           \n           if (t > 0.0 && t < hit_t){\n               hit_t = t;\n               hit_normal = normal;\n               hit_object_index = 1;\n           }\n       }\n    }\n    \n    return hit_object_index != -1;\n    \n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from -1 to 1)\n    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / (iResolution.y);\n\n    vec3 cameraOrigin = vec3(0.0,0.62,0.88);\n\n    float radfov = (60.0 / 2.0) * PI / 180.0;\n    float focalLength = 1.0 / tan(radfov);\n    \n    vec3 direction = normalize(vec3(uv, -0.5*focalLength));\n    \n    vec3 planeColor = vec3(0.0, 0.0, 0.0);\n    vec3 sunDirection = vec3(0.69827787402339, 0.7005567709187919, -0.14706536427456407);\n    vec3 sunColor = vec3(1.17, 0.94, 0.51);\n    vec3 sphereDColor = vec3(0.67, 0.3, 0.42);\n    vec3 planeDColor = vec3(0.48, 0.32, 0.46);\n    \n    vec3 normal;\n    int obj;\n    float t;\n\n    if (intersect_scene(cameraOrigin, direction, normal, obj, t)) {\n        vec3 p = cameraOrigin + t * direction;\n\n        vec3 L = normalize(sunDirection);\n        float NdotL = max(dot(normal, L), 0.0);\n\n        vec3 color;\n    \n        if (obj == 0) color = sphereDColor;\n        if (obj == 1) color = planeDColor;\n\n        planeColor = color * sunColor * NdotL;\n        \n        vec3 offset = p + 0.001 * normal;\n        \n        if (intersect_scene(offset, sunDirection, normal, obj, t)) {\n            \n            planeColor = vec3(0.0);\n        }\n    }\n    \n    planeColor = toSRGB(planeColor);\n    // Output to screen\n    fragColor = vec4(planeColor,1.0);\n}",
+   "name": "Image",
+   "description": "",
+   "type": "image"
+  }
+ ]
+}

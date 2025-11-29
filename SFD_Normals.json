@@ -1,0 +1,34 @@
+{
+ "ver": "0.1",
+ "info": {
+  "id": "W3jBWV",
+  "date": "0",
+  "viewed": 0,
+  "name": "Ex6, Task 5",
+  "description": "tag",
+  "likes": 0,
+  "published": "Private",
+  "usePreview": 0,
+  "tags": [
+   "tag"
+  ],
+  "hasliked": 0,
+  "parentid": "",
+  "parentname": ""
+ },
+ "renderpass": [
+  {
+   "inputs": [],
+   "outputs": [
+    {
+     "id": "4dfGRr",
+     "channel": 0
+    }
+   ],
+   "code": "\n#define PI 3.14159265359\n\n\n// Some math magic that I don't fully understand.\nfloat sdfTorus(vec3 p, vec2 t) {\n    vec2 q = vec2(length(p.xz) - t.x, p.y);\n    return length(q) - t.y;\n}\n\n// Wrapper — we’ll render one torus centered near origin\nfloat sdf(vec3 p){\n    return sdfTorus(p, vec2(2.1, 0.45));\n}\n\nvec3 normalVec(vec3 p, float h) {\n    float dx = sdf(p + vec3(h, 0.0, 0.0)) - sdf(p - vec3(h, 0.0, 0.0));\n    float dy = sdf(p + vec3(0.0, h, 0.0)) - sdf(p - vec3(0.0, h, 0.0));\n    float dz = sdf(p + vec3(0.0, 0.0, h)) - sdf(p - vec3(0.0, 0.0, h));\n    return normalize(vec3(dx, dy, dz));\n}\n\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n\n    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / (iResolution.y);\n\n    vec3 cameraOrigin = vec3(0.33, 3.23, 15);\n    vec3 lookingAt = vec3(0.0, 0.0, 0.0);\n    vec3 upVec = vec3(0.0, 1.0, 0.0);\n    \n    float radfov = (60.0 / 2.0) * PI / 180.0;\n    float focalLength = 1.0 / tan(radfov);\n    \n    vec3 Z = normalize(cameraOrigin - lookingAt);\n    vec3 X = normalize(cross(upVec, Z));\n    vec3 Y = cross(Z, X);\n    \n    mat3 R = mat3(X, Y, Z);\n    \n    vec3 direction = R*normalize(vec3(uv, -0.5*focalLength));\n    \n    vec3 outputColor = vec3(0.0);\n\n    float t = 0.0;\n    for (int i = 0; i < 100; ++i){\n        vec3 p = cameraOrigin + t * direction;   //step along the ray by distance t\n        float d = sdf(p);                        //evaluate SDF at p\n        if (d < 0.001){                          //Check against some small threshold\n            outputColor = normalVec(p, 0.001)*0.5+0.5;\n            break;\n        }\n        t += d;\n    }\n\n    // Output to screen\n    fragColor = vec4(outputColor,1.0);\n}",
+   "name": "Image",
+   "description": "",
+   "type": "image"
+  }
+ ]
+}
